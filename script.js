@@ -1,46 +1,29 @@
-// JavaScript to dynamically create property listings
-const propertyList = document.getElementById('property-list');
+document.addEventListener("DOMContentLoaded", () => {
+    const listings = [
+        { title: "Cozy Apartment Downtown", link: "https://www.airbnb.com/rooms/1" },
+        { title: "Beach House Getaway", link: "https://www.airbnb.com/rooms/2" },
+        { title: "Mountain Cabin Retreat", link: "https://www.airbnb.com/rooms/3" },
+        { title: "Luxury City Penthouse", link: "https://www.airbnb.com/rooms/4" },
+        { title: "Quiet Countryside Cottage", link: "https://www.airbnb.com/rooms/5" },
+        { title: "Modern Loft", link: "https://www.airbnb.com/rooms/6" },
+        { title: "Rustic Farmhouse", link: "https://www.airbnb.com/rooms/7" },
+        { title: "Urban Studio", link: "https://www.airbnb.com/rooms/8" },
+        { title: "Seaside Villa", link: "https://www.airbnb.com/rooms/9" },
+        { title: "Forest Treehouse", link: "https://www.airbnb.com/rooms/10" },
+        { title: "Country Manor", link: "https://www.airbnb.com/rooms/11" },
+        { title: "Lakefront Bungalow", link: "https://www.airbnb.com/rooms/12" }
+    ];
 
-const listings = [
-    { name: 'Luxury Villa', price: '$200/night', link: 'https://www.airbnb.com/rooms/123456' },
-    { name: 'Cozy Cottage', price: '$150/night', link: 'https://www.airbnb.com/rooms/234567' },
-    { name: 'Beachfront Bungalow', price: '$180/night', link: 'https://www.airbnb.com/rooms/345678' },
-    { name: 'City Apartment', price: '$120/night', link: 'https://www.airbnb.com/rooms/456789' },
-    { name: 'Mountain Cabin', price: '$130/night', link: 'https://www.airbnb.com/rooms/567890' },
-    { name: 'Modern Condo', price: '$140/night', link: 'https://www.airbnb.com/rooms/678901' },
-    { name: 'Rustic Barn', price: '$90/night', link: 'https://www.airbnb.com/rooms/789012' },
-    { name: 'Downtown Loft', price: '$170/night', link: 'https://www.airbnb.com/rooms/890123' },
-    { name: 'Lakehouse Retreat', price: '$210/night', link: 'https://www.airbnb.com/rooms/901234' },
-    { name: 'Countryside Cottage', price: '$160/night', link: 'https://www.airbnb.com/rooms/912345' },
-    { name: 'Luxury Penthouse', price: '$300/night', link: 'https://www.airbnb.com/rooms/101234' },
-    { name: 'Charming Chalet', price: '$140/night', link: 'https://www.airbnb.com/rooms/112345' }
-];
-
-function loadListings() {
-    listings.forEach(listing => {
-        const propertyCard = document.createElement('div');
-        propertyCard.classList.add('property-card');
-        propertyCard.innerHTML = `
-            <h3>${listing.name}</h3>
-            <p>Price: ${listing.price}</p>
-            <a href="${listing.link}" target="_blank">View Listing</a>
-        `;
-        propertyList.appendChild(propertyCard);
+    const listingContainer = document.getElementById('listing-container');
+    
+    listings.forEach((listing) => {
+        const listingDiv = document.createElement('div');
+        listingDiv.className = 'listing';
+        listingDiv.innerHTML = `<h3>${listing.title}</h3><a href="${listing.link}" target="_blank">View on Airbnb</a>`;
+        listingContainer.appendChild(listingDiv);
     });
+});
+
+function scrollToSection(sectionId) {
+    document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth' });
 }
-
-loadListings();
-
-// Hamburger menu toggle
-const menuBtn = document.getElementById('menu-btn');
-const menu = document.getElementById('menu');
-
-menuBtn.addEventListener('click', () => {
-    menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
-});
-
-// Logo redirect to homepage
-const logo = document.getElementById('logo');
-logo.addEventListener('click', () => {
-    window.scrollTo(0, 0);
-});

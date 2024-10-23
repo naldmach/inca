@@ -7,42 +7,45 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Header Section -->
     <header>
         <div class="logo">
-            <a href="#" id="logo">InCA Homes</a>
+            <img src="inca-homes-high-resolution-logo-transparent.png" alt="InCA Homes Logo" onclick="scrollToSection('home')" />
         </div>
-        <div class="hamburger-menu">
-            <button id="menu-btn">&#9776;</button>
-        </div>
-        <nav id="menu">
+        <nav>
             <ul>
-                <li><a href="#">Home</a></li>
-                <li><a href="#listings">Listings</a></li>
-                <li><a href="#footer">Footer</a></li>
-                <li><a href="#contact">Contact</a></li>
+                <li><a href="#home" onclick="scrollToSection('home')">Home</a></li>
+                <li><a href="#about" onclick="scrollToSection('about')">About</a></li>
+                <li><a href="#listings" onclick="scrollToSection('listings')">Listings</a></li>
+                <li><a href="#contact" onclick="scrollToSection('contact')">Contact</a></li>
             </ul>
         </nav>
     </header>
 
-    <!-- Listings Section -->
-    <section id="listings" class="listings-container">
-        <h1>Available Properties</h1>
-        <div id="property-list" class="property-list"></div>
+    <section id="hero">
+        <div class="hero-text">
+            <h1>Welcome to InCA Homes</h1>
+            <p>Your gateway to amazing properties</p>
+        </div>
     </section>
 
-    <!-- Footer Section -->
-    <footer id="footer">
-        <p>&copy; 2024 InCA Homes. All rights reserved.</p>
-    </footer>
+    <section id="about">
+        <h2>About InCA Homes</h2>
+        <p>Discover the best properties with InCA Homes. We offer a curated selection of vacation rentals to suit any need.</p>
+    </section>
 
-    <!-- Contact Section -->
+    <section id="listings">
+        <h2>Property Listings</h2>
+        <div class="listing-container" id="listing-container"></div>
+    </section>
+
     <section id="contact">
         <h2>Contact Us</h2>
-        <p>Email: <a href="mailto:contact@incahomes.com">contact@incahomes.com</a></p>
-        <p>Phone: <a href="tel:+1234567890">+1234567890</a></p>
-        <p>Facebook: <a href="https://facebook.com/InCAHomes" target="_blank">InCA Homes</a></p>
+        <p>Visit Us on <a href="https://facebook.com" target="_blank"><i class="fab fa-facebook"></i> Facebook</a></p>
     </section>
+
+    <footer>
+        <p>&copy; 2024 InCA Homes. All rights reserved.</p>
+    </footer>
 
     <script src="script.js"></script>
 </body>
