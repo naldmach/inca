@@ -1,14 +1,14 @@
 // Sample property listings
 const listings = [
     {
-        image: 'your-image1.jpg',
+        image: 'assets/azure-north-1.jpg',
         title: 'Comfy and Homey Space - Azure North',
         location: 'San Fernando, Pampanga',
         price: '₱2,530/night',
         link: 'https://www.airbnb.com/rooms/example1'
     },
     {
-        image: 'your-image2.jpg',
+        image: 'assets/modern-minimalist-azure.jpg',
         title: 'Modern & Minimalist Space - Azure North',
         location: 'San Fernando, Pampanga',
         price: '₱2,299/night',
