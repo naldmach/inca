@@ -40,7 +40,7 @@ document.getElementById('contactForm').addEventListener('submit', function (even
     const message = document.getElementById('message').value;
 
     // Construct the email content
-    const mailtoLink = `mailto:incahomes3@yahoo.com?subject=Message from ${encodeURIComponent(name)}&body=${encodeURIComponent(message)}`;
+    const mailtoLink = `mailto:machondonald@gmail.com?subject=Message from ${encodeURIComponent(name)}&body=${encodeURIComponent(message)}`;
 
     // Open the email client
     window.location.href = mailtoLink;
