@@ -1,29 +1,52 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener('DOMContentLoaded', function () {
     const listings = [
-        { title: "Cozy Apartment Downtown", link: "https://www.airbnb.com/rooms/1" },
-        { title: "Beach House Getaway", link: "https://www.airbnb.com/rooms/2" },
-        { title: "Mountain Cabin Retreat", link: "https://www.airbnb.com/rooms/3" },
-        { title: "Luxury City Penthouse", link: "https://www.airbnb.com/rooms/4" },
-        { title: "Quiet Countryside Cottage", link: "https://www.airbnb.com/rooms/5" },
-        { title: "Modern Loft", link: "https://www.airbnb.com/rooms/6" },
-        { title: "Rustic Farmhouse", link: "https://www.airbnb.com/rooms/7" },
-        { title: "Urban Studio", link: "https://www.airbnb.com/rooms/8" },
-        { title: "Seaside Villa", link: "https://www.airbnb.com/rooms/9" },
-        { title: "Forest Treehouse", link: "https://www.airbnb.com/rooms/10" },
-        { title: "Country Manor", link: "https://www.airbnb.com/rooms/11" },
-        { title: "Lakefront Bungalow", link: "https://www.airbnb.com/rooms/12" }
+        {
+            image: 'listing1.jpg',
+            title: 'Comfy and Homey Space - Azure North',
+            location: 'San Fernando, Pampanga',
+            price: '₱2,530/night',
+            link: 'https://www.airbnb.com/link1'
+        },
+        {
+            image: 'listing2.jpg',
+            title: 'Modern & Minimalist Space - Azure North',
+            location: 'San Fernando, Pampanga',
+            price: '₱2,299/night',
+            link: 'https://www.airbnb.com/link2'
+        },
+        {
+            image: 'listing3.jpg',
+            title: 'A Holiday Space - Azure North',
+            location: 'San Fernando, Pampanga',
+            price: '₱1,840/night',
+            link: 'https://www.airbnb.com/link3'
+        },
+        {
+            image: 'listing4.jpg',
+            title: 'Urban Residences - Azure',
+            location: 'Parañaque, Metro Manila',
+            price: '₱5,750/night',
+            link: 'https://www.airbnb.com/link4'
+        }
     ];
 
-    const listingContainer = document.getElementById('listing-container');
-    
-    listings.forEach((listing) => {
-        const listingDiv = document.createElement('div');
-        listingDiv.className = 'listing';
-        listingDiv.innerHTML = `<h3>${listing.title}</h3><a href="${listing.link}" target="_blank">View on Airbnb</a>`;
-        listingContainer.appendChild(listingDiv);
+    const cardContainer = document.getElementById('card-container');
+
+    listings.forEach(listing => {
+        const card = document.createElement('div');
+        card.classList.add('card');
+
+        card.innerHTML = `
+            <a href="${listing.link}" target="_blank">
+                <img src="${listing.image}" alt="${listing.title}">
+                <div class="card-body">
+                    <h3>${listing.title}</h3>
+                    <p>${listing.location}</p>
+                    <p class="price">${listing.price}</p>
+                </div>
+            </a>
+        `;
+
+        cardContainer.appendChild(card);
     });
 });
-
-function scrollToSection(sectionId) {
-    document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth' });
-}
