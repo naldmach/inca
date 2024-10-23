@@ -40,7 +40,7 @@ header nav a {
 /* Hero Section */
 #hero {
     height: 60vh;
-    background: url('hero-background.jpg') center/cover no-repeat;
+    background: url('assets/cover\ photo.jpeg') center/cover no-repeat;
     position: relative;
     color: white;
     display: flex;
