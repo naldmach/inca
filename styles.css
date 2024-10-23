@@ -41,7 +41,7 @@ header {
 
 /* Hero Section */
 .hero {
-    background: url('your-image.jpg') no-repeat center center/cover;
+    background: url('assets/cover\ photo.jpeg') no-repeat center center/cover;
     color: #fff;
     text-align: center;
     padding: 150px 30px;
