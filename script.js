@@ -39,9 +39,35 @@ document.getElementById('contactForm').addEventListener('submit', function (even
     const name = document.getElementById('name').value;
     const message = document.getElementById('message').value;
 
-    // Construct the email content
-    const mailtoLink = `mailto:machondonald@gmail.com?subject=Message from ${encodeURIComponent(name)}&body=${encodeURIComponent(message)}`;
-
-    // Open the email client
-    window.location.href = mailtoLink;
+    // Simulate sending the message
+    simulateSendMessage(name, message);
 });
+
+// Simulate sending the message
+function simulateSendMessage(name, message) {
+    // Here you would typically send data to a server via AJAX or Fetch API.
+    // For simulation, we just create a delay to mock the server request.
+    
+    setTimeout(() => {
+        showNotification(`Message from ${name} has been sent!`);
+    }, 1000);
+}
+
+// Show notification
+function showNotification(message) {
+    const notificationElement = document.getElementById('notification');
+    const notificationMessage = document.getElementById('notification-message');
+
+    notificationMessage.textContent = message;
+    notificationElement.classList.remove('hidden');
+
+    // Automatically hide the notification after 3 seconds
+    setTimeout(() => {
+        notificationElement.classList.add('hidden');
+    }, 3000);
+}
+
+// Close notification manually
+function closeNotification() {
+    document.getElementById('notification').classList.add('hidden');
+}
