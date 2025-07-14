@@ -1,17 +1,5 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "package.json",
-      "use": "@vercel/next"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/"
-    }
-  ],
   "env": {
     "NEXT_PUBLIC_SUPABASE_URL": "https://mopeyuykcxvdposbfzdz.supabase.co",
     "NEXT_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1vcGV5dXlrY3h2ZHBvc2JmemR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE2MDAwNDEsImV4cCI6MjA2NzE3NjA0MX0.s-imFxp4iXS6zGkz54X2JbOermok9oZQYqFDWoVmPYo",
