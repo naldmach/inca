@@ -71,13 +71,17 @@ async function getProperty(id: string): Promise<Property | null> {
   }
 }
 
-type Props = {
+export type PageProps = {
   params: { 
     id: string 
   }
 };
 
-export default async function PropertyDetailPage({ params }: Readonly<Props>) {
+export default async function PropertyDetailPage({
+  params
+}: {
+  params: PageProps['params']
+}) {
   const property = await getProperty(params.id);
   if (!property) return notFound();
 
