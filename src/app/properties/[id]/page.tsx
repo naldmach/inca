@@ -38,8 +38,8 @@ async function getProperty(id: string): Promise<Property | null> {
         headers: {
           apikey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
           Authorization: `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`,
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
+          "Content-Type": "application/json",
+          Accept: "application/json",
         },
         cache: "no-store",
       }
@@ -51,14 +51,14 @@ async function getProperty(id: string): Promise<Property | null> {
     }
 
     const data = await res.json();
-    
+
     // Validate and type-cast the response
     if (data && data.length > 0) {
       const property = data[0] as Property;
-      
+
       // Additional validation
       if (!property.id) {
-        console.error('Invalid property data:', property);
+        console.error("Invalid property data:", property);
         return null;
       }
 
@@ -67,29 +67,32 @@ async function getProperty(id: string): Promise<Property | null> {
 
     return null;
   } catch (error) {
-    console.error('Error fetching property:', error);
+    console.error("Error fetching property:", error);
     return null;
   }
 }
 
-// Next.js 15 requires params to be a Promise
-type PageProps = {
-  params: Promise<{ id: string }>
-}
-
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
   const { id } = await params;
   const property = await getProperty(id);
 
   return {
-    title: property ? property.title : 'Property Not Found',
-    description: property ? property.description : 'Property details not available'
+    title: property ? property.title : "Property Not Found",
+    description: property
+      ? property.description
+      : "Property details not available",
   };
 }
 
-export default async function PropertyDetailPage({ 
-  params 
-}: PageProps) {
+export default async function PropertyDetailPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const { id } = await params;
   const property = await getProperty(id);
   if (!property) return notFound();
@@ -98,7 +101,7 @@ export default async function PropertyDetailPage({
     <div className="max-w-4xl mx-auto py-12 px-4">
       <h1 className="text-3xl font-bold mb-4">{property.title}</h1>
       <div className="mb-6 flex flex-wrap gap-4">
-{property.images && property.images.length > 0 ? (
+        {property.images && property.images.length > 0 ? (
           property.images.map((img: PropertyImage) => (
             <div
               key={img.id}
@@ -138,7 +141,7 @@ export default async function PropertyDetailPage({
         <span className="font-semibold">Address:</span> {property.address},{" "}
         {property.city}, {property.state} {property.zip_code}
       </div>
-{property.amenities && property.amenities.length > 0 && (
+      {property.amenities && property.amenities.length > 0 && (
         <div className="mb-4">
           <span className="font-semibold">Amenities:</span>
           <ul className="list-disc ml-6 mt-2">
