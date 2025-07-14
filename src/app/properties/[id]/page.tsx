@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { Metadata } from "next";
 import Image from "next/image";
 
 // Comprehensive type definitions for property-related data
@@ -71,17 +72,24 @@ async function getProperty(id: string): Promise<Property | null> {
   }
 }
 
-export type PageProps = {
+type Params = { 
   params: { 
     id: string 
-  }
-};
+  } 
+}
 
-export default async function PropertyDetailPage({
-  params
-}: {
-  params: PageProps['params']
-}) {
+export async function generateMetadata({ params }: Params): Promise<Metadata> {
+  const property = await getProperty(params.id);
+
+  return {
+    title: property ? property.title : 'Property Not Found',
+    description: property ? property.description : 'Property details not available'
+  };
+}
+
+export default async function PropertyDetailPage({ 
+  params 
+}: Params) {
   const property = await getProperty(params.id);
   if (!property) return notFound();
 
