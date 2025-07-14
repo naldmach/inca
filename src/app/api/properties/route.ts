@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { uploadToCloudinary } from "@/lib/cloudinary";
 
 export async function GET(request: NextRequest) {
-  const supabase = await createClient();
+  const supabase = createClient();
   const { searchParams } = new URL(request.url);
 
   const page = parseInt(searchParams.get("page") || "1");
@@ -52,7 +52,7 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const supabase = await createClient();
+  const supabase = createClient();
 
   const {
     data: { user },
