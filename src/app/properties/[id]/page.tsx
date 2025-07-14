@@ -72,14 +72,14 @@ async function getProperty(id: string): Promise<Property | null> {
   }
 }
 
-type Params = { 
-  params: { 
-    id: string 
-  } 
+// Next.js 15 requires params to be a Promise
+type PageProps = {
+  params: Promise<{ id: string }>
 }
 
-export async function generateMetadata({ params }: Params): Promise<Metadata> {
-  const property = await getProperty(params.id);
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { id } = await params;
+  const property = await getProperty(id);
 
   return {
     title: property ? property.title : 'Property Not Found',
@@ -89,8 +89,9 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 
 export default async function PropertyDetailPage({ 
   params 
-}: Params) {
-  const property = await getProperty(params.id);
+}: PageProps) {
+  const { id } = await params;
+  const property = await getProperty(id);
   if (!property) return notFound();
 
   return (
