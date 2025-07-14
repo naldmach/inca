@@ -16,11 +16,9 @@ async function getProperty(id: string) {
   return data[0];
 }
 
-export default async function PropertyDetailPage({
-  params,
-}: {
-  params: { id: string };
-}) {
+type Props = { params: { id: string } };
+
+export default async function PropertyDetailPage({ params }: Props) {
   const property = await getProperty(params.id);
   if (!property) return notFound();
 
