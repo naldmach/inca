@@ -1,5 +1,5 @@
 // @ts-expect-error: No type declarations for 'cloudinary' in Next.js 15
-import { v2 as cloudinary } from "cloudinary";
+import { v2 as cloudinary } from "cloudinary/v2";
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
