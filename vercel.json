@@ -13,10 +13,10 @@
     }
   ],
   "env": {
-    "NEXT_PUBLIC_SUPABASE_URL": "@supabase_url",
-    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "@supabase_anon_key",
-    "CLOUDINARY_CLOUD_NAME": "@cloudinary_cloud_name",
-    "CLOUDINARY_API_KEY": "@cloudinary_api_key",
-    "CLOUDINARY_API_SECRET": "@cloudinary_api_secret"
+    "NEXT_PUBLIC_SUPABASE_URL": "https://mopeyuykcxvdposbfzdz.supabase.co",
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1vcGV5dXlrY3h2ZHBvc2JmemR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE2MDAwNDEsImV4cCI6MjA2NzE3NjA0MX0.s-imFxp4iXS6zGkz54X2JbOermok9oZQYqFDWoVmPYo",
+    "CLOUDINARY_CLOUD_NAME": "dfjenilh2",
+    "CLOUDINARY_API_KEY": "142717474533215",
+    "CLOUDINARY_API_SECRET": "Wk689nD6PP5XFyF2lr-vA_AMrB4"
   }
 }
