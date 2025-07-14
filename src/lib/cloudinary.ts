@@ -1,3 +1,4 @@
+// @ts-expect-error: No type declarations for 'cloudinary' in Next.js 15
 import { v2 as cloudinary } from "cloudinary";
 
 cloudinary.config({
@@ -28,7 +29,7 @@ export async function uploadToCloudinary(
             { width: 1200, height: 800, crop: "limit", quality: "auto" },
           ],
         },
-        (error, result) => {
+        (error: Error | undefined, result: unknown) => {
           if (error) {
             reject(error);
           } else {

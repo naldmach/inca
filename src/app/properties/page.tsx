@@ -3,11 +3,7 @@ import PropertyGrid from "@/components/PropertyGrid";
 import PropertyFilters from "@/components/PropertyFilters";
 import PropertySearch from "@/components/PropertySearch";
 
-export default function PropertiesPage({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined };
-}) {
+export default function PropertiesPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8">
@@ -22,7 +18,7 @@ export default function PropertiesPage({
 
         <main className="lg:col-span-3">
           <Suspense fallback={<PropertyGridSkeleton />}>
-            <PropertyGrid searchParams={searchParams} />
+            <PropertyGrid />
           </Suspense>
         </main>
       </div>
