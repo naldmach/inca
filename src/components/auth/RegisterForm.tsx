@@ -33,22 +33,45 @@ export default function RegisterForm() {
     resolver: zodResolver(schema),
   });
 
-  const onSubmit = async (data: RegisterFormData) => {
+const onSubmit = async (data: RegisterFormData) => {
     setLoading(true);
     setError(null);
     const supabase = createClient();
-    const { error } = await supabase.auth.signUp({
+    
+    const { data: signUpData, error } = await supabase.auth.signUp({
       email: data.email,
       password: data.password,
       options: {
-        data: { full_name: data.fullName },
-      },
+        data: { 
+          full_name: data.fullName,
+          // Add any additional metadata you want to store
+        },
+        emailRedirectTo: typeof window !== 'undefined' ? `${window.location.origin}/dashboard` : undefined
+      }
     });
+
     setLoading(false);
+
     if (error) {
-      setError(error.message);
+      console.error('Signup Error:', {
+        message: error.message,
+        status: error.status,
+        cause: error.cause
+      });
+      setError(error.message || 'An unexpected error occurred during signup');
+      return;
+    }
+
+    // Check signup result
+    if (signUpData.user) {
+      // Inform user about email confirmation
+      setError('Please check your email to confirm your account');
+      
+      // Optional: Log successful signup
+      console.log('Signup successful, user created:', signUpData.user);
     } else {
-      router.push("/dashboard");
+      // Unexpected case
+      setError('Signup process did not complete. Please try again.');
     }
   };
 

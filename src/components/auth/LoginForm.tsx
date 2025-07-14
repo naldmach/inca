@@ -26,19 +26,52 @@ export default function LoginForm() {
     resolver: zodResolver(schema),
   });
 
-  const onSubmit = async (data: LoginFormData) => {
+const onSubmit = async (data: LoginFormData) => {
     setLoading(true);
     setError(null);
     const supabase = createClient();
-    const { error } = await supabase.auth.signInWithPassword({
+    
+    const { data: loginData, error } = await supabase.auth.signInWithPassword({
       email: data.email,
       password: data.password,
     });
+
     setLoading(false);
+
     if (error) {
-      setError(error.message);
+      console.error('Login Error:', {
+        message: error.message,
+        status: error.status,
+        cause: error.cause
+      });
+
+      // Specific error handling
+      switch (error.status) {
+        case 400:
+          setError('Invalid login credentials');
+          break;
+        case 401:
+          setError('Unauthorized. Please check your email and password.');
+          break;
+        case 403:
+          setError('Email not confirmed. Please check your email.');
+          break;
+        default:
+          setError(error.message || 'An unexpected error occurred');
+      }
+      return;
+    }
+
+    // Check login result
+    if (loginData.user) {
+      // Check email confirmation status
+      if (loginData.user.email_confirmed_at) {
+        router.push("/dashboard");
+      } else {
+        setError('Please confirm your email before logging in');
+      }
     } else {
-      router.push("/dashboard");
+      setError('Login process did not complete. Please try again.');
     }
   };
 

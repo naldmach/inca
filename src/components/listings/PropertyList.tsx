@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 export default function PropertyList() {
   const [properties, setProperties] = useState<any[]>([]);
@@ -29,17 +30,23 @@ export default function PropertyList() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
       {properties.map((property) => (
-        <div key={property.id} className="bg-white rounded-lg shadow p-4">
-          <h2 className="text-lg font-bold mb-2">{property.title}</h2>
-          <p className="text-gray-600 mb-2">
-            {property.city}, {property.state}
-          </p>
-          <p className="text-gray-800 font-semibold mb-2">
-            ${property.price_per_month}/mo
-          </p>
-          <p className="text-sm text-gray-500 mb-2">{property.description}</p>
-          {/* Add more property details and images here */}
-        </div>
+        <Link
+          key={property.id}
+          href={`/properties/${property.id}`}
+          className="block"
+        >
+          <div className="bg-white rounded-lg shadow p-4 hover:shadow-lg transition">
+            <h2 className="text-lg font-bold mb-2">{property.title}</h2>
+            <p className="text-gray-600 mb-2">
+              {property.city}, {property.state}
+            </p>
+            <p className="text-gray-800 font-semibold mb-2">
+              ${property.price_per_month}/mo
+            </p>
+            <p className="text-sm text-gray-500 mb-2">{property.description}</p>
+            {/* Add more property details and images here */}
+          </div>
+        </Link>
       ))}
     </div>
   );
