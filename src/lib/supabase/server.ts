@@ -8,6 +8,7 @@ export function createClient() {
     {
       cookies: {
         get(name: string) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           return (getCookies() as any).get(name)?.value;
         },
         set(name, value, options) {
