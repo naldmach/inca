@@ -40,6 +40,7 @@ export default function AuthForm() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState<string | null>(null);
+  const [pendingEmail, setPendingEmail] = useState<string | null>(null);
   const router = useRouter();
 
   // Login form
@@ -74,6 +75,7 @@ export default function AuthForm() {
     setLoading(true);
     setError(null);
     setSuccess(null);
+    setPendingEmail(null);
     const supabase = createClient();
     const { data: loginData, error } = await supabase.auth.signInWithPassword({
       email: data.email,
@@ -81,17 +83,48 @@ export default function AuthForm() {
     });
     setLoading(false);
     if (error) {
-      setError(error.message || "Login failed");
+      if (
+        error.status === 403 ||
+        (error.message && error.message.toLowerCase().includes("not confirmed"))
+      ) {
+        setError("Please confirm your email before logging in.");
+        setPendingEmail(data.email);
+      } else {
+        setError(error.message || "Login failed");
+      }
       return;
     }
     if (loginData.user) {
       if (loginData.user.email_confirmed_at) {
         router.push("/dashboard");
       } else {
-        setError("Please confirm your email before logging in");
+        setError("Please confirm your email before logging in.");
+        setPendingEmail(data.email);
       }
     } else {
       setError("Login process did not complete. Please try again.");
+    }
+  };
+
+  const onResendConfirmation = async () => {
+    if (!pendingEmail) return;
+    setLoading(true);
+    setError(null);
+    setSuccess(null);
+    const supabase = createClient();
+    // Try to trigger a resend by calling signUp again
+    const { error } = await supabase.auth.signUp({
+      email: pendingEmail,
+      password: Math.random().toString(36), // dummy password, won't be used
+    });
+    setLoading(false);
+    if (error) {
+      setError(
+        error.message ||
+          "Failed to resend confirmation email. Please try again later."
+      );
+    } else {
+      setSuccess("Confirmation email resent. Please check your inbox.");
     }
   };
 
@@ -256,6 +289,17 @@ export default function AuthForm() {
             )}
           </div>
           {error && <p className="text-red-600 text-center">{error}</p>}
+          {pendingEmail && (
+            <button
+              type="button"
+              className="w-full mt-2 text-blue-600 hover:underline"
+              onClick={onResendConfirmation}
+              disabled={loading}
+            >
+              {loading ? "Resending..." : "Resend confirmation email"}
+            </button>
+          )}
+          {success && <p className="text-green-600 text-center">{success}</p>}
           <button
             type="submit"
             className="w-full bg-blue-600 text-white py-2 rounded font-semibold hover:bg-blue-700 transition"
