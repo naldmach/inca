@@ -1,6 +1,8 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import LogoutButton from "@/components/auth/LogoutButton";
+import DashboardNav from "@/components/dashboard/DashboardNav";
+import UserInfoCard from "@/components/dashboard/UserInfoCard";
 
 export default async function DashboardPage() {
   const supabase = createClient();
@@ -13,14 +15,21 @@ export default async function DashboardPage() {
   }
 
   return (
-    <div className="max-w-xl mx-auto mt-16 p-8 bg-white rounded shadow text-center">
-      <h1 className="text-2xl font-bold mb-4">
-        Welcome, {user.user_metadata?.full_name || user.email}!
-      </h1>
-      <p className="mb-6 text-gray-600">
-        You are logged in as <span className="font-mono">{user.email}</span>
-      </p>
-      <LogoutButton />
+    <div className="max-w-4xl mx-auto mt-16 p-8 bg-white rounded shadow">
+      <div className="flex flex-col md:flex-row gap-8">
+        <div className="md:w-1/3">
+          <DashboardNav />
+        </div>
+        <div className="flex-1 flex flex-col items-center gap-6">
+          <UserInfoCard
+            name={user.user_metadata?.full_name || user.email || "User"}
+            email={user.email || "No email"}
+          />
+          <div className="mt-4">
+            <LogoutButton />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
