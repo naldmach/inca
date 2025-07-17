@@ -2,8 +2,17 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 
+interface Property {
+  id: string;
+  title: string;
+  city: string;
+  state: string;
+  price_per_month: number;
+  description: string;
+}
+
 export default function PropertyList() {
-  const [properties, setProperties] = useState<any[]>([]);
+  const [properties, setProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -16,6 +25,7 @@ export default function PropertyList() {
         const data = await res.json();
         setProperties(data.properties || []);
       } catch (err) {
+        console.error('Error fetching properties:', err);
         setError("Failed to load properties");
       }
       setLoading(false);
