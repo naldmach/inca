@@ -9,7 +9,8 @@ export const dynamic = "force-dynamic";
 function ResetPasswordInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const accessToken = searchParams.get("access_token");
+  const accessToken =
+    searchParams.get("access_token") || searchParams.get("code");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
