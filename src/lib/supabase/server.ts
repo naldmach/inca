@@ -1,5 +1,5 @@
 import { createServerClient } from "@supabase/ssr";
-import { cookies } from "next/headers";
+import { cookies as getCookies } from "next/headers";
 
 export function createClient() {
   return createServerClient(
@@ -7,8 +7,8 @@ export function createClient() {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        get(name) {
-          return cookies().get(name)?.value;
+        get(name: string) {
+          return (getCookies() as any).get(name)?.value;
         },
         set(name, value, options) {
           // Optionally implement if you need to set cookies server-side
