@@ -5,8 +5,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { useRouter } from "next/navigation";
-
 const schema = z
   .object({
     email: z.string().email(),
@@ -22,7 +20,6 @@ const schema = z
 type RegisterFormData = z.infer<typeof schema>;
 
 export default function RegisterForm() {
-  const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const {
