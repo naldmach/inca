@@ -1,12 +1,12 @@
 "use client";
 
-export const dynamic = "force-dynamic";
-
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 
-export default function ResetPasswordPage() {
+export const dynamic = "force-dynamic";
+
+function ResetPasswordInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const accessToken = searchParams.get("access_token");
@@ -84,5 +84,13 @@ export default function ResetPasswordPage() {
         </button>
       </form>
     </div>
+  );
+}
+
+export default function ResetPasswordPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ResetPasswordInner />
+    </Suspense>
   );
 }
