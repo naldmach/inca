@@ -2,8 +2,19 @@ import { createClient } from "@/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 import { verifyToken } from "@/lib/auth";
 
+// Force dynamic rendering for this route
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: NextRequest) {
-  const supabase = createClient();
+  let supabase;
+  try {
+    supabase = createClient();
+  } catch (error) {
+    return NextResponse.json(
+      { error: "Database connection failed. Please check environment variables." },
+      { status: 500 }
+    );
+  }
 
   // Check authentication
   const token = request.cookies.get("auth-token")?.value;

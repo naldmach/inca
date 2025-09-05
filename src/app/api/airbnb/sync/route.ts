@@ -2,6 +2,9 @@ import { createClient } from "@/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 import { verifyToken } from "@/lib/auth";
 
+// Force dynamic rendering for this route
+export const dynamic = 'force-dynamic';
+
 // This endpoint will be used to sync properties with Airbnb listings
 // For now, we'll create a manual mapping system
 export async function POST(request: NextRequest) {

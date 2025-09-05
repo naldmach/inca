@@ -3,6 +3,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { uploadToCloudinary } from "@/lib/cloudinary";
 import { verifyToken } from "@/lib/auth";
 
+// Force dynamic rendering for this route
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: NextRequest) {
   const supabase = createClient();
   const { searchParams } = new URL(request.url);

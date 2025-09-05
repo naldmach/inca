@@ -5,9 +5,10 @@ A modern, Airbnb-like property management system built for property owners who w
 ## 🎯 Project Overview
 
 **Project Name:** InCA Homes  
-**Client:** Property owner wanting simplified Airbnb-like system  
+**Client:** Property owner wanting simplified Airbnb-like system
 
 ### Core Features
+
 - **Property Management Dashboard** - Complete admin panel for managing properties
 - **Customer Booking Website** - Beautiful, responsive website for guests
 - **Airbnb Integration** - Sync properties with Airbnb (future feature)
@@ -18,6 +19,7 @@ A modern, Airbnb-like property management system built for property owners who w
 ## 🛠 Tech Stack
 
 ### Frontend
+
 - **Framework:** Next.js 14 (React)
 - **Styling:** Tailwind CSS + Headless UI
 - **Icons:** Lucide React
@@ -26,6 +28,7 @@ A modern, Airbnb-like property management system built for property owners who w
 - **Image Handling:** Next.js Image optimization
 
 ### Backend
+
 - **Runtime:** Node.js (Vercel Serverless Functions)
 - **Framework:** Next.js API Routes
 - **Authentication:** JWT + bcrypt
@@ -33,12 +36,14 @@ A modern, Airbnb-like property management system built for property owners who w
 - **Validation:** Zod schemas
 
 ### Database
+
 - **Primary DB:** Supabase (PostgreSQL - Free tier)
 - **ORM:** Native SQL queries with pg client
 - **Storage:** 500MB (thousands of properties)
 - **Features:** Built-in auth, real-time, auto-backups
 
 ### Third-Party Services
+
 - **Hosting:** Vercel (Free Hobby Plan)
 - **Images:** Cloudinary (Free - 25GB bandwidth)
 - **Domain:** .vercel.app initially (custom domain $10/year optional)
@@ -49,6 +54,7 @@ A modern, Airbnb-like property management system built for property owners who w
 ## 🚀 Getting Started
 
 ### Prerequisites
+
 - Node.js 18+
 - npm or yarn
 - Supabase account
@@ -57,31 +63,34 @@ A modern, Airbnb-like property management system built for property owners who w
 ### Installation
 
 1. **Clone the repository**
+
    ```bash
    git clone <repository-url>
    cd inca-homes-property-management
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    ```
 
 3. **Set up environment variables**
    Create a `.env.local` file in the root directory:
+
    ```env
    # Database
    DATABASE_URL=postgresql://...supabase...
    NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
    NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 
-   # Authentication  
+   # Authentication
    JWT_SECRET=your-super-secret-key-here
    NEXTAUTH_URL=https://incahomes.vercel.app
 
    # Image Storage
    CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
-   CLOUDINARY_API_KEY=your_cloudinary_api_key  
+   CLOUDINARY_API_KEY=your_cloudinary_api_key
    CLOUDINARY_API_SECRET=your_cloudinary_api_secret
 
    # Application Configuration
@@ -90,10 +99,12 @@ A modern, Airbnb-like property management system built for property owners who w
    ```
 
 4. **Set up the database**
+
    - Create a new Supabase project
    - Run the SQL commands from `database/schema.sql` in your Supabase SQL editor
 
 5. **Run the development server**
+
    ```bash
    npm run dev
    ```
@@ -140,13 +151,15 @@ The system uses the following main tables:
 ## 🔌 API Endpoints
 
 ### Authentication
+
 ```
 POST   /api/auth/login          # Admin login
-POST   /api/auth/logout         # Admin logout  
+POST   /api/auth/logout         # Admin logout
 GET    /api/auth/me             # Get current user
 ```
 
 ### Properties
+
 ```
 GET    /api/properties          # List properties (public)
 POST   /api/properties          # Create property (admin)
@@ -156,6 +169,7 @@ DELETE /api/properties/[id]     # Delete property (admin)
 ```
 
 ### File Management
+
 ```
 POST   /api/upload              # Upload images
 DELETE /api/upload/[id]         # Delete image
@@ -164,17 +178,20 @@ DELETE /api/upload/[id]         # Delete image
 ## 🎨 Design System
 
 ### Color Palette
+
 - **Primary:** #3B82F6 (Blue)
 - **Secondary:** #EF4444 (Red - Airbnb inspired)
 - **Success:** #10B981 (Green)
 - **Warning:** #F59E0B (Yellow)
 
 ### Typography
+
 - **Headings:** Inter (Bold)
 - **Body:** Inter (Regular)
 - **Buttons:** Inter (Medium)
 
 ### Components
+
 - **Cards:** Rounded corners + subtle shadows
 - **Buttons:** Rounded + hover states
 - **Forms:** Clean inputs + validation states
@@ -182,12 +199,14 @@ DELETE /api/upload/[id]         # Delete image
 ## 📱 Features
 
 ### Customer Website
+
 - **Homepage:** Hero section + property grid + search
-- **Property Details:** Photo gallery + amenities + booking widget  
+- **Property Details:** Photo gallery + amenities + booking widget
 - **Search:** Filters by location, price, guests, dates
 - **Mobile-first:** Responsive design for all devices
 
-### Admin Dashboard  
+### Admin Dashboard
+
 - **Login Page:** Secure admin authentication
 - **Dashboard:** Overview stats + recent activity
 - **Properties:** Grid view + add/edit forms
@@ -197,6 +216,7 @@ DELETE /api/upload/[id]         # Delete image
 ## 🚀 Deployment
 
 ### Vercel (Recommended)
+
 1. Push your code to GitHub
 2. Connect your repository to Vercel
 3. Add environment variables in Vercel dashboard:
@@ -207,7 +227,9 @@ DELETE /api/upload/[id]         # Delete image
 **Important:** For production deployment, ensure `NEXT_PUBLIC_APP_URL` is set to your actual Vercel domain, not localhost:3000. The property detail pages and API calls depend on this URL being correct.
 
 ### Other Platforms
+
 The application can be deployed to any platform that supports Next.js:
+
 - Netlify
 - Railway
 - DigitalOcean App Platform
@@ -216,12 +238,14 @@ The application can be deployed to any platform that supports Next.js:
 ## 📊 Success Metrics
 
 ### Technical Metrics
+
 - Page load time: < 3 seconds
-- Mobile responsiveness: 100% 
+- Mobile responsiveness: 100%
 - Uptime: 99.9% (Vercel SLA)
 - SEO score: > 90 (Lighthouse)
 
 ### Business Metrics
+
 - Property management time: Reduced by 80%
 - Booking inquiries: Tracked and organized
 - Client satisfaction: Easy self-management
@@ -230,6 +254,7 @@ The application can be deployed to any platform that supports Next.js:
 ## 🔄 Future Enhancements
 
 ### Phase 2 Features
+
 - [ ] Airbnb API integration
 - [ ] Multi-language support
 - [ ] Advanced analytics + reporting
@@ -240,6 +265,7 @@ The application can be deployed to any platform that supports Next.js:
 - [ ] Review management system
 
 ### Scaling Options
+
 - [ ] Multi-tenant (multiple property owners)
 - [ ] White-label solution
 - [ ] API for third-party integrations
@@ -249,19 +275,22 @@ The application can be deployed to any platform that supports Next.js:
 ## 📞 Support & Maintenance
 
 ### Documentation
+
 - [ ] User manual for client
 - [ ] Developer documentation
 - [ ] API documentation
 - [ ] Deployment guide
 
 ### Training
+
 - [ ] 1-hour training session for client
 - [ ] Video tutorials for common tasks
 - [ ] Admin panel user guide
 
 ### Ongoing Support
+
 - [ ] Bug fixes and updates
-- [ ] Feature requests evaluation  
+- [ ] Feature requests evaluation
 - [ ] Performance monitoring
 - [ ] Security updates
 

@@ -4,7 +4,8 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Upload, X, Plus } from "lucide-react";
+import { Upload, X } from "lucide-react";
+import Image from "next/image";
 
 const propertySchema = z.object({
   title: z.string().min(3, "Title must be at least 3 characters"),
@@ -391,9 +392,11 @@ export default function PropertyForm({
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
           {imagePreviews.map((preview, index) => (
             <div key={index} className="relative">
-              <img
+              <Image
                 src={preview}
                 alt={`Preview ${index + 1}`}
+                width={200}
+                height={128}
                 className="w-full h-32 object-cover rounded-lg"
               />
               <button

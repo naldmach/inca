@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Search, MapPin, Users, Calendar, Filter } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -27,11 +27,7 @@ export default function PropertiesPage() {
     guests: "",
   });
 
-  useEffect(() => {
-    fetchProperties();
-  }, [filters]);
-
-  const fetchProperties = async () => {
+  const fetchProperties = useCallback(async () => {
     setLoading(true);
     setError("");
     try {
@@ -55,7 +51,11 @@ export default function PropertiesPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filters]);
+
+  useEffect(() => {
+    fetchProperties();
+  }, [fetchProperties]);
 
   const handleFilterChange = (key: string, value: string) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
