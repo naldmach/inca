@@ -1,4 +1,7 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
 
 :root {
   --background: #ffffff;
@@ -8,8 +11,7 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: "Inter", system-ui, sans-serif;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -22,5 +24,82 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Inter", system-ui, sans-serif;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Form focus states */
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  ring: 2px;
+  ring-color: theme("colors.primary.500");
+  ring-offset: 2px;
+}
+
+/* Ensure text is visible in inputs */
+input,
+textarea,
+select {
+  color: #000000 !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #6b7280 !important;
+}
+
+/* Button hover effects */
+.btn-primary {
+  @apply bg-primary-600 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:bg-primary-700 hover:shadow-lg transform hover:-translate-y-0.5;
+}
+
+.btn-secondary {
+  @apply bg-secondary-600 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:bg-secondary-700 hover:shadow-lg transform hover:-translate-y-0.5;
+}
+
+.btn-outline {
+  @apply border border-gray-300 text-gray-700 px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:bg-gray-50 hover:border-gray-400;
+}
+
+/* Card styles */
+.card {
+  @apply bg-white rounded-lg shadow-soft border border-gray-100 overflow-hidden;
+}
+
+.card-hover {
+  @apply card transition-all duration-200 hover:shadow-lg hover:-translate-y-1;
+}
+
+/* Loading animation */
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }

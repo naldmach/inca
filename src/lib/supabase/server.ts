@@ -8,11 +8,22 @@ export function createClient() {
     {
       cookies: {
         get(name: string) {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           return (getCookies() as any).get(name)?.value;
         },
-        set(name, value, options) {
-          // Optionally implement if you need to set cookies server-side
+        set(
+          name: string,
+          value: string,
+          options: {
+            path?: string;
+            maxAge?: number;
+            domain?: string;
+            sameSite?: string;
+            secure?: boolean;
+          }
+        ) {
+          // Server-side cookie setting is not implemented
+          // This is intentional as we don't need to set cookies server-side
+          return;
         },
       },
     }

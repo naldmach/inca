@@ -1,35 +1,30 @@
 import { createClient } from "@/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
 import { uploadToCloudinary } from "@/lib/cloudinary";
+import { verifyToken } from "@/lib/auth";
 
 export async function GET(request: NextRequest) {
   const supabase = createClient();
   const { searchParams } = new URL(request.url);
 
   const page = parseInt(searchParams.get("page") || "1");
-  const limit = parseInt(searchParams.get("limit") || "10");
+  const limit = parseInt(searchParams.get("limit") || "12");
   const city = searchParams.get("city");
   const minPrice = searchParams.get("minPrice");
   const maxPrice = searchParams.get("maxPrice");
-  const propertyType = searchParams.get("propertyType");
+  const guests = searchParams.get("guests");
+  const status = searchParams.get("status") || "active"; // Default to active for public
 
   let query = supabase
     .from("properties")
-    .select(
-      `
-      *,
-      images:property_images(*),
-      amenities:property_amenities(*),
-      profile:profiles(*)
-    `
-    )
-    .eq("is_active", true)
+    .select("*")
+    .eq("status", status)
     .order("created_at", { ascending: false });
 
   if (city) query = query.ilike("city", `%${city}%`);
-  if (minPrice) query = query.gte("price_per_month", parseInt(minPrice));
-  if (maxPrice) query = query.lte("price_per_month", parseInt(maxPrice));
-  if (propertyType) query = query.eq("property_type", propertyType);
+  if (minPrice) query = query.gte("price", parseInt(minPrice));
+  if (maxPrice) query = query.lte("price", parseInt(maxPrice));
+  if (guests) query = query.gte("guests", parseInt(guests));
 
   const from = (page - 1) * limit;
   const to = from + limit - 1;
@@ -54,13 +49,15 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   const supabase = createClient();
 
-  const {
-    data: { user },
-    error: authError,
-  } = await supabase.auth.getUser();
-
-  if (authError || !user) {
+  // Check authentication
+  const token = request.cookies.get('auth-token')?.value;
+  if (!token) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const decoded = verifyToken(token);
+  if (!decoded) {
+    return NextResponse.json({ error: "Invalid token" }, { status: 401 });
   }
 
   try {
@@ -73,7 +70,9 @@ export async function POST(request: NextRequest) {
       .from("properties")
       .insert({
         ...propertyData,
-        user_id: user.id,
+        user_id: decoded.id,
+        images: [], // Will be updated after image upload
+        amenities: propertyData.amenities || []
       })
       .select()
       .single();
@@ -90,16 +89,28 @@ export async function POST(request: NextRequest) {
       const buffer = Buffer.from(await image.arrayBuffer());
       const cloudinaryResult = await uploadToCloudinary(buffer);
 
-      return supabase.from("property_images").insert({
-        property_id: property.id,
-        cloudinary_public_id: cloudinaryResult.public_id,
+      return {
         url: cloudinaryResult.secure_url,
+        public_id: cloudinaryResult.public_id,
         alt_text: `${propertyData.title} - Image ${index + 1}`,
-        sort_order: index,
-      });
+        is_primary: index === 0
+      };
     });
 
-    await Promise.all(imagePromises);
+    const uploadedImages = await Promise.all(imagePromises);
+
+    // Update property with images
+    const { error: updateError } = await supabase
+      .from("properties")
+      .update({ images: uploadedImages })
+      .eq("id", property.id);
+
+    if (updateError) {
+      return NextResponse.json(
+        { error: updateError.message },
+        { status: 500 }
+      );
+    }
 
     return NextResponse.json({ property }, { status: 201 });
   } catch (error) {

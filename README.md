@@ -1,41 +1,291 @@
-# Rental Listing Platform
+# InCA Homes - Property Management System
 
-<!-- Trigger redeploy: trivial change -->
+A modern, Airbnb-like property management system built for property owners who want to simplify their vacation rental business.
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## 🎯 Project Overview
 
-## Getting Started
+**Project Name:** InCA Homes  
+**Client:** Property owner wanting simplified Airbnb-like system  
 
-First, run the development server:
+### Core Features
+- **Property Management Dashboard** - Complete admin panel for managing properties
+- **Customer Booking Website** - Beautiful, responsive website for guests
+- **Airbnb Integration** - Sync properties with Airbnb (future feature)
+- **Mobile-Responsive Design** - Works perfectly on all devices
+- **Self-Manageable** - Easy for clients to manage independently
+- **Zero Monthly Costs** - Free hosting and services initially
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## 🛠 Tech Stack
+
+### Frontend
+- **Framework:** Next.js 14 (React)
+- **Styling:** Tailwind CSS + Headless UI
+- **Icons:** Lucide React
+- **Forms:** React Hook Form + Zod validation
+- **State:** React Context + useState
+- **Image Handling:** Next.js Image optimization
+
+### Backend
+- **Runtime:** Node.js (Vercel Serverless Functions)
+- **Framework:** Next.js API Routes
+- **Authentication:** JWT + bcrypt
+- **File Upload:** Formidable + Cloudinary
+- **Validation:** Zod schemas
+
+### Database
+- **Primary DB:** Supabase (PostgreSQL - Free tier)
+- **ORM:** Native SQL queries with pg client
+- **Storage:** 500MB (thousands of properties)
+- **Features:** Built-in auth, real-time, auto-backups
+
+### Third-Party Services
+- **Hosting:** Vercel (Free Hobby Plan)
+- **Images:** Cloudinary (Free - 25GB bandwidth)
+- **Domain:** .vercel.app initially (custom domain $10/year optional)
+- **Analytics:** Vercel Analytics (free)
+- **Monitoring:** Built-in Vercel monitoring
+- **SSL:** Automatic (Vercel included)
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js 18+
+- npm or yarn
+- Supabase account
+- Cloudinary account
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd inca-homes-property-management
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Set up environment variables**
+   Create a `.env.local` file in the root directory:
+   ```env
+   # Database
+   DATABASE_URL=postgresql://...supabase...
+   NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+
+   # Authentication  
+   JWT_SECRET=your-super-secret-key-here
+   NEXTAUTH_URL=https://incahomes.vercel.app
+
+   # Image Storage
+   CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
+   CLOUDINARY_API_KEY=your_cloudinary_api_key  
+   CLOUDINARY_API_SECRET=your_cloudinary_api_secret
+
+   # Application Configuration
+   NEXT_PUBLIC_APP_URL=https://your-app-name.vercel.app  # For production
+   # NEXT_PUBLIC_APP_URL=http://localhost:3000  # For local development
+   ```
+
+4. **Set up the database**
+   - Create a new Supabase project
+   - Run the SQL commands from `database/schema.sql` in your Supabase SQL editor
+
+5. **Run the development server**
+   ```bash
+   npm run dev
+   ```
+
+6. **Open your browser**
+   Navigate to [http://localhost:3000](http://localhost:3000)
+
+## 📁 Project Structure
+
+```
+src/
+├── app/                    # Next.js App Router
+│   ├── admin/             # Admin panel pages
+│   │   ├── login/         # Admin login
+│   │   └── page.tsx       # Admin dashboard
+│   ├── api/               # Backend API routes
+│   │   ├── auth/          # Authentication endpoints
+│   │   ├── properties/    # Property management
+│   │   └── upload/        # File upload
+│   ├── properties/        # Customer-facing property pages
+│   └── page.tsx           # Customer homepage
+├── components/            # React components
+│   ├── admin/            # Admin panel components
+│   ├── customer/         # Customer-facing components
+│   ├── shared/           # Shared components
+│   └── ui/               # UI components
+├── lib/                  # Utility libraries
+│   ├── auth.ts           # Authentication helpers
+│   ├── supabase/         # Database client
+│   ├── cloudinary.ts     # Image upload
+│   └── utils.ts          # Helper functions
+└── types/                # TypeScript definitions
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🗄 Database Schema
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+The system uses the following main tables:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **users** - Admin authentication and user management
+- **properties** - Property listings with images and amenities
+- **bookings** - Booking information (synced from Airbnb)
+- **analytics** - Event tracking and analytics data
 
-## Learn More
+## 🔌 API Endpoints
 
-To learn more about Next.js, take a look at the following resources:
+### Authentication
+```
+POST   /api/auth/login          # Admin login
+POST   /api/auth/logout         # Admin logout  
+GET    /api/auth/me             # Get current user
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Properties
+```
+GET    /api/properties          # List properties (public)
+POST   /api/properties          # Create property (admin)
+GET    /api/properties/[id]     # Get property details
+PUT    /api/properties/[id]     # Update property (admin)
+DELETE /api/properties/[id]     # Delete property (admin)
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### File Management
+```
+POST   /api/upload              # Upload images
+DELETE /api/upload/[id]         # Delete image
+```
 
-## Deploy on Vercel
+## 🎨 Design System
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Color Palette
+- **Primary:** #3B82F6 (Blue)
+- **Secondary:** #EF4444 (Red - Airbnb inspired)
+- **Success:** #10B981 (Green)
+- **Warning:** #F59E0B (Yellow)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-# Force Vercel deployment update
+### Typography
+- **Headings:** Inter (Bold)
+- **Body:** Inter (Regular)
+- **Buttons:** Inter (Medium)
+
+### Components
+- **Cards:** Rounded corners + subtle shadows
+- **Buttons:** Rounded + hover states
+- **Forms:** Clean inputs + validation states
+
+## 📱 Features
+
+### Customer Website
+- **Homepage:** Hero section + property grid + search
+- **Property Details:** Photo gallery + amenities + booking widget  
+- **Search:** Filters by location, price, guests, dates
+- **Mobile-first:** Responsive design for all devices
+
+### Admin Dashboard  
+- **Login Page:** Secure admin authentication
+- **Dashboard:** Overview stats + recent activity
+- **Properties:** Grid view + add/edit forms
+- **Analytics:** Charts + booking reports
+- **Settings:** System configuration
+
+## 🚀 Deployment
+
+### Vercel (Recommended)
+1. Push your code to GitHub
+2. Connect your repository to Vercel
+3. Add environment variables in Vercel dashboard:
+   - Set `NEXT_PUBLIC_APP_URL` to your Vercel app URL (e.g., `https://your-app-name.vercel.app`)
+   - Add all other environment variables from `.env.local`
+4. Deploy
+
+**Important:** For production deployment, ensure `NEXT_PUBLIC_APP_URL` is set to your actual Vercel domain, not localhost:3000. The property detail pages and API calls depend on this URL being correct.
+
+### Other Platforms
+The application can be deployed to any platform that supports Next.js:
+- Netlify
+- Railway
+- DigitalOcean App Platform
+- AWS Amplify
+
+## 📊 Success Metrics
+
+### Technical Metrics
+- Page load time: < 3 seconds
+- Mobile responsiveness: 100% 
+- Uptime: 99.9% (Vercel SLA)
+- SEO score: > 90 (Lighthouse)
+
+### Business Metrics
+- Property management time: Reduced by 80%
+- Booking inquiries: Tracked and organized
+- Client satisfaction: Easy self-management
+- Cost savings: $50-200/month vs alternatives
+
+## 🔄 Future Enhancements
+
+### Phase 2 Features
+- [ ] Airbnb API integration
+- [ ] Multi-language support
+- [ ] Advanced analytics + reporting
+- [ ] Email marketing integration
+- [ ] Guest communication system
+- [ ] Calendar sync (Google, Outlook)
+- [ ] Payment integration (Stripe)
+- [ ] Review management system
+
+### Scaling Options
+- [ ] Multi-tenant (multiple property owners)
+- [ ] White-label solution
+- [ ] API for third-party integrations
+- [ ] Advanced booking management
+- [ ] Revenue optimization tools
+
+## 📞 Support & Maintenance
+
+### Documentation
+- [ ] User manual for client
+- [ ] Developer documentation
+- [ ] API documentation
+- [ ] Deployment guide
+
+### Training
+- [ ] 1-hour training session for client
+- [ ] Video tutorials for common tasks
+- [ ] Admin panel user guide
+
+### Ongoing Support
+- [ ] Bug fixes and updates
+- [ ] Feature requests evaluation  
+- [ ] Performance monitoring
+- [ ] Security updates
+
+## 🎯 Project Deliverables
+
+1. **Live Website** - https://incahomes.vercel.app
+2. **Admin Dashboard** - https://incahomes.vercel.app/admin
+3. **Source Code** - GitHub repository
+4. **Documentation** - User guide + technical docs
+5. **Training** - Client onboarding session
+6. **Support** - 30-day post-launch support
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
+
+---
+
+**This project delivers a complete, professional property management system for $0/month hosting costs, with the flexibility to scale as the business grows.**
