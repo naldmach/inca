@@ -26,7 +26,6 @@ export default function DebugPage() {
           hasSupabaseUrl: !!process.env.NEXT_PUBLIC_SUPABASE_URL,
           hasSupabaseKey: !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
           hasJwtSecret: !!process.env.JWT_SECRET,
-          hasCloudinary: !!process.env.CLOUDINARY_CLOUD_NAME,
         },
       });
     } catch (error) {

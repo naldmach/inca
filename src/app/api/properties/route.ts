@@ -1,10 +1,10 @@
 import { createClient } from "@/lib/supabase/server";
 import { NextRequest, NextResponse } from "next/server";
-import { uploadToCloudinary } from "@/lib/cloudinary";
+import { uploadPropertyImage } from "@/lib/storage";
 import { verifyToken } from "@/lib/auth";
 
 // Force dynamic rendering for this route
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 export async function GET(request: NextRequest) {
   const supabase = createClient();
@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
   const supabase = createClient();
 
   // Check authentication
-  const token = request.cookies.get('auth-token')?.value;
+  const token = request.cookies.get("auth-token")?.value;
   if (!token) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
@@ -61,6 +61,10 @@ export async function POST(request: NextRequest) {
   const decoded = verifyToken(token);
   if (!decoded) {
     return NextResponse.json({ error: "Invalid token" }, { status: 401 });
+  }
+
+  if (decoded.role !== "admin") {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
   try {
@@ -75,7 +79,7 @@ export async function POST(request: NextRequest) {
         ...propertyData,
         user_id: decoded.id,
         images: [], // Will be updated after image upload
-        amenities: propertyData.amenities || []
+        amenities: propertyData.amenities || [],
       })
       .select()
       .single();
@@ -87,16 +91,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Upload images to Cloudinary
+    // Upload images to Supabase Storage
     const imagePromises = images.map(async (image, index) => {
-      const buffer = Buffer.from(await image.arrayBuffer());
-      const cloudinaryResult = await uploadToCloudinary(buffer);
+      const { url, path } = await uploadPropertyImage(image);
 
       return {
-        url: cloudinaryResult.secure_url,
-        public_id: cloudinaryResult.public_id,
+        url,
+        path,
         alt_text: `${propertyData.title} - Image ${index + 1}`,
-        is_primary: index === 0
+        is_primary: index === 0,
       };
     });
 
@@ -109,10 +112,7 @@ export async function POST(request: NextRequest) {
       .eq("id", property.id);
 
     if (updateError) {
-      return NextResponse.json(
-        { error: updateError.message },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: updateError.message }, { status: 500 });
     }
 
     return NextResponse.json({ property }, { status: 201 });

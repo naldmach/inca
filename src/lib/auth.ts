@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
-import { createClient } from './supabase/server';
+import { createAdminClient } from './supabase/admin';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-super-secret-key-here';
 
@@ -43,7 +43,7 @@ export function verifyToken(token: string): any {
 }
 
 export async function authenticateUser(email: string, password: string): Promise<User | null> {
-  const supabase = createClient();
+  const supabase = createAdminClient();
   
   const { data: user, error } = await supabase
     .from('users')
@@ -70,7 +70,7 @@ export async function authenticateUser(email: string, password: string): Promise
 }
 
 export async function createUser(email: string, password: string, name: string): Promise<User | null> {
-  const supabase = createClient();
+  const supabase = createAdminClient();
   
   const hashedPassword = await hashPassword(password);
   
@@ -94,7 +94,7 @@ export async function createUser(email: string, password: string, name: string):
 }
 
 export async function getUserById(id: number): Promise<User | null> {
-  const supabase = createClient();
+  const supabase = createAdminClient();
   
   const { data: user, error } = await supabase
     .from('users')
