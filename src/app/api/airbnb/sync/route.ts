@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { verifyToken } from "@/lib/auth";
 
 // Force dynamic rendering for this route
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 // This endpoint will be used to sync properties with Airbnb listings
 // For now, we'll create a manual mapping system
@@ -19,6 +19,10 @@ export async function POST(request: NextRequest) {
   const decoded = verifyToken(token);
   if (!decoded) {
     return NextResponse.json({ error: "Invalid token" }, { status: 401 });
+  }
+
+  if (decoded.role !== "admin") {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
   try {
@@ -74,6 +78,10 @@ export async function GET(request: NextRequest) {
   const decoded = verifyToken(token);
   if (!decoded) {
     return NextResponse.json({ error: "Invalid token" }, { status: 401 });
+  }
+
+  if (decoded.role !== "admin") {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
   try {

@@ -43,6 +43,10 @@ export default function AdminDashboard() {
       const response = await fetch("/api/auth/me");
       if (response.ok) {
         const data = await response.json();
+        if (data.user.role !== "admin") {
+          router.push("/admin/login");
+          return;
+        }
         setUser(data.user);
       } else {
         router.push("/admin/login");

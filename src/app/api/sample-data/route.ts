@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { verifyToken } from "@/lib/auth";
 
 // Force dynamic rendering for this route
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
   const supabase = createClient();
@@ -17,6 +17,10 @@ export async function POST(request: NextRequest) {
   const decoded = verifyToken(token);
   if (!decoded) {
     return NextResponse.json({ error: "Invalid token" }, { status: 401 });
+  }
+
+  if (decoded.role !== "admin") {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
   try {

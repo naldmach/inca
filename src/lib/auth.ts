@@ -1,8 +1,21 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
-import { createClient } from './supabase/server';
+import { createAdminClient } from './supabase/admin';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-super-secret-key-here';
+// Read lazily rather than at module load, so a missing value surfaces as a
+// clear runtime error instead of breaking the build or, worse, silently
+// signing tokens with a fallback string that is public in this repo.
+function getJwtSecret(): string {
+  const secret = process.env.JWT_SECRET;
+
+  if (!secret) {
+    throw new Error(
+      'JWT_SECRET is not set. Add it to .env.local and to your deployment environment.'
+    );
+  }
+
+  return secret;
+}
 
 export interface User {
   id: number;
@@ -29,21 +42,25 @@ export function generateToken(user: Omit<User, 'password_hash'>): string {
       name: user.name, 
       role: user.role 
     },
-    JWT_SECRET,
+    getJwtSecret(),
     { expiresIn: '7d' }
   );
 }
 
 export function verifyToken(token: string): any {
+  // Resolved outside the try so a misconfigured secret fails loudly instead of
+  // being swallowed as an invalid-token 401.
+  const secret = getJwtSecret();
+
   try {
-    return jwt.verify(token, JWT_SECRET);
+    return jwt.verify(token, secret);
   } catch (error) {
     return null;
   }
 }
 
 export async function authenticateUser(email: string, password: string): Promise<User | null> {
-  const supabase = createClient();
+  const supabase = createAdminClient();
   
   const { data: user, error } = await supabase
     .from('users')
@@ -70,7 +87,7 @@ export async function authenticateUser(email: string, password: string): Promise
 }
 
 export async function createUser(email: string, password: string, name: string): Promise<User | null> {
-  const supabase = createClient();
+  const supabase = createAdminClient();
   
   const hashedPassword = await hashPassword(password);
   
@@ -94,7 +111,7 @@ export async function createUser(email: string, password: string, name: string):
 }
 
 export async function getUserById(id: number): Promise<User | null> {
-  const supabase = createClient();
+  const supabase = createAdminClient();
   
   const { data: user, error } = await supabase
     .from('users')
