@@ -101,6 +101,20 @@ export default function Navbar() {
         : "text-gray-700 hover:bg-gray-50"
     }`;
 
+  const hostPromo = (
+    <Link
+      href="/become-a-host"
+      role="menuitem"
+      onClick={() => setIsOpen(false)}
+      className="block px-4 py-3 transition-colors duration-200 hover:bg-gray-50"
+    >
+      <p className="text-sm font-semibold text-gray-900">Become a host</p>
+      <p className="mt-0.5 text-xs text-gray-500">
+        It&apos;s easy to start hosting and earn extra income.
+      </p>
+    </Link>
+  );
+
   return (
     <nav className="bg-white shadow-sm sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -139,7 +153,7 @@ export default function Navbar() {
           <div className="flex items-center gap-1">
             {user?.role !== "admin" && (
               <Link
-                href="/admin/login"
+                href="/become-a-host"
                 className="hidden md:block rounded-full px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 transition-colors duration-200"
               >
                 Become a host
@@ -193,6 +207,14 @@ export default function Navbar() {
                         </p>
                       </div>
                       <div className="my-2 border-t border-gray-200" />
+                      <Link
+                        href="/account"
+                        role="menuitem"
+                        onClick={() => setIsOpen(false)}
+                        className={menuItemClass("/account")}
+                      >
+                        Account settings
+                      </Link>
                       {user.role === "admin" && (
                         <Link
                           href="/admin"
@@ -203,6 +225,13 @@ export default function Navbar() {
                           Admin dashboard
                         </Link>
                       )}
+                      {user.role !== "admin" && (
+                        <>
+                          <div className="my-2 border-t border-gray-200" />
+                          {hostPromo}
+                        </>
+                      )}
+                      <div className="my-2 border-t border-gray-200" />
                       <button
                         type="button"
                         role="menuitem"
@@ -231,14 +260,7 @@ export default function Navbar() {
                         Log in
                       </Link>
                       <div className="my-2 border-t border-gray-200" />
-                      <Link
-                        href="/admin/login"
-                        role="menuitem"
-                        onClick={() => setIsOpen(false)}
-                        className="block px-4 py-2 text-sm text-gray-700 transition-colors duration-200 hover:bg-gray-50"
-                      >
-                        Become a host
-                      </Link>
+                      {hostPromo}
                     </>
                   )}
                 </div>
