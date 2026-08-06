@@ -86,18 +86,25 @@ export async function authenticateUser(email: string, password: string): Promise
   return user;
 }
 
-export async function createUser(email: string, password: string, name: string): Promise<User | null> {
+// Role defaults to 'guest'. Callers that need an admin must ask for one
+// explicitly, so no public signup path can create one by omission.
+export async function createUser(
+  email: string,
+  password: string,
+  name: string,
+  role: 'admin' | 'guest' = 'guest'
+): Promise<User | null> {
   const supabase = createAdminClient();
-  
+
   const hashedPassword = await hashPassword(password);
-  
+
   const { data: user, error } = await supabase
     .from('users')
     .insert({
       email,
       password_hash: hashedPassword,
       name,
-      role: 'admin'
+      role
     })
     .select()
     .single();
