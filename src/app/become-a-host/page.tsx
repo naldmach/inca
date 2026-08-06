@@ -25,7 +25,7 @@ export default function BecomeAHostPage() {
       }
     }
 
-    router.push("/admin/login");
+    router.push("/become-a-host/start");
   };
 
   return (

@@ -32,6 +32,10 @@ export default function Navbar() {
     return pathname.startsWith(href);
   };
 
+  // The listing wizard supplies its own header, so the site nav would stack
+  // on top of it. Hooks above this point still run unconditionally.
+  const hideNav = pathname.startsWith("/become-a-host/start");
+
   // Re-check on navigation so the menu reflects a fresh login or logout
   useEffect(() => {
     let cancelled = false;
@@ -114,6 +118,10 @@ export default function Navbar() {
       </p>
     </Link>
   );
+
+  if (hideNav) {
+    return null;
+  }
 
   return (
     <nav className="bg-white shadow-sm sticky top-0 z-50">
