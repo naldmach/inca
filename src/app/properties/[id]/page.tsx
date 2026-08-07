@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import { formatPrice } from "@/lib/utils";
 
 // Comprehensive type definitions for property-related data
@@ -196,31 +197,12 @@ export default async function PropertyDetailPage({
               </p>
             </div>
 
-            {property.airbnb_id ? (
-              <a
-                href={`https://www.airbnb.com/rooms/${property.airbnb_id}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full bg-orange-500 text-white py-3 rounded-lg font-semibold hover:bg-orange-600 transition flex items-center justify-center space-x-2"
-              >
-                <span>Book on Airbnb</span>
-                <svg
-                  className="w-4 h-4"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </a>
-            ) : (
-              <button className="w-full bg-gray-400 text-white py-3 rounded-lg font-semibold cursor-not-allowed">
-                Booking Not Available
-              </button>
-            )}
+            <Link
+              href={`/properties/${property.id}/book`}
+              className="w-full bg-orange-500 text-white py-3 rounded-lg font-semibold hover:bg-orange-600 transition flex items-center justify-center"
+            >
+              Book now
+            </Link>
           </div>
         </div>
       </div>

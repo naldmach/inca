@@ -22,6 +22,7 @@ import {
   emptyDraft,
   validateStep,
 } from "@/lib/listing-wizard";
+import { PAYMENT_METHODS } from "@/lib/payments";
 import {
   ChipSelect,
   ChoiceGrid,
@@ -628,6 +629,69 @@ export default function ListingWizardPage() {
                 </div>
               </div>
             </div>
+          </div>
+        );
+
+      case "payment":
+        return (
+          <div>
+            <StepHeading
+              title="How should guests pay you?"
+              subtitle="Guests transfer the total directly to you and submit a reference number, which you confirm. Fill in every field of a method to offer it — leave a method blank to skip it."
+            />
+
+            <div className="space-y-6">
+              {PAYMENT_METHODS.map((method) => {
+                const values = draft.paymentDetails[method.id] || {};
+
+                return (
+                  <section
+                    key={method.id}
+                    className="rounded-xl border border-gray-200 p-5"
+                  >
+                    <h2 className="font-semibold text-gray-900">
+                      {method.label}
+                    </h2>
+                    <p className="mt-1 text-sm text-gray-600">
+                      {method.description}
+                    </p>
+
+                    <div className="mt-4 space-y-3">
+                      {method.fields.map((field) => (
+                        <div key={field.key}>
+                          <label
+                            htmlFor={`${method.id}-${field.key}`}
+                            className="block text-sm font-medium text-gray-700"
+                          >
+                            {field.label}
+                          </label>
+                          <input
+                            id={`${method.id}-${field.key}`}
+                            type="text"
+                            value={values[field.key] || ""}
+                            placeholder={field.placeholder}
+                            onChange={(e) =>
+                              set("paymentDetails", {
+                                ...draft.paymentDetails,
+                                [method.id]: {
+                                  ...values,
+                                  [field.key]: e.target.value,
+                                },
+                              })
+                            }
+                            className="mt-1 w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 focus:border-gray-900 focus:outline-none focus:ring-1 focus:ring-gray-900"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+                );
+              })}
+            </div>
+
+            <p className="mt-6 text-sm text-gray-600">
+              These details are shown only to guests who have booked your place.
+            </p>
           </div>
         );
 

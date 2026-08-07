@@ -1,3 +1,5 @@
+import { enabledMethods, type HostPaymentDetails } from "./payments";
+
 // Shape and step configuration for the /become-a-host listing wizard.
 //
 // Fields with a matching properties column are mapped on publish; everything
@@ -49,6 +51,7 @@ export interface ListingDraft {
   instantBook: string;
   basePrice: number;
   weekendAdjustment: number;
+  paymentDetails: HostPaymentDetails;
 }
 
 export const emptyDraft: ListingDraft = {
@@ -82,6 +85,7 @@ export const emptyDraft: ListingDraft = {
   instantBook: "review",
   basePrice: 1500,
   weekendAdjustment: 6,
+  paymentDetails: {},
 };
 
 export const PROPERTY_TYPES = [
@@ -228,7 +232,8 @@ export type StepId =
   | "description"
   | "finish-setup"
   | "instant-book"
-  | "pricing";
+  | "pricing"
+  | "payment";
 
 export interface StepConfig {
   id: StepId;
@@ -255,6 +260,7 @@ export const STEPS: StepConfig[] = [
   { id: "finish-setup", section: 2 },
   { id: "instant-book", section: 2 },
   { id: "pricing", section: 2 },
+  { id: "payment", section: 2 },
 ];
 
 // Returns an error string when the step is incomplete, or null when Next is allowed.
@@ -295,6 +301,10 @@ export function validateStep(
       return draft.description.trim() ? null : "Write a description";
     case "pricing":
       return draft.basePrice > 0 ? null : "Set a base price";
+    case "payment":
+      return enabledMethods(draft.paymentDetails).length > 0
+        ? null
+        : "Set up at least one way for guests to pay you";
     default:
       return null;
   }
@@ -317,6 +327,7 @@ export function toListingDetails(draft: ListingDraft) {
     highlights: draft.highlights,
     instant_book: draft.instantBook,
     weekend_adjustment: draft.weekendAdjustment,
+    payment_methods: draft.paymentDetails,
     unit: draft.unit,
     building: draft.building,
     district: draft.district,
