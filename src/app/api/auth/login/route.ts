@@ -15,7 +15,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const user = await authenticateUser(email, password);
+    // Signup stores the address lowercased, so the lookup has to match that
+    // or anyone who typed a capital letter could never sign back in.
+    const user = await authenticateUser(
+      String(email).trim().toLowerCase(),
+      password
+    );
 
     if (!user) {
       return NextResponse.json(
