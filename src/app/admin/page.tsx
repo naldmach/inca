@@ -239,6 +239,19 @@ export default function AdminDashboard() {
             </button>
 
             <button
+              onClick={() => router.push("/admin/bookings")}
+              className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+            >
+              <Calendar className="h-5 w-5 text-primary-600 mr-3" />
+              <div className="text-left">
+                <p className="font-medium text-gray-900">Bookings</p>
+                <p className="text-sm text-gray-600">
+                  Confirm guest payments
+                </p>
+              </div>
+            </button>
+
+            <button
               onClick={() => router.push("/admin/airbnb")}
               className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
             >

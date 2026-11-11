@@ -125,6 +125,8 @@ export default function BookingPaymentPage({
   }
 
   const submitted = booking.payment_status === "submitted";
+  const confirmed = booking.payment_status === "confirmed";
+  const rejected = booking.payment_status === "rejected";
   const activeMethod = methods.find((m) => m.id === selected);
   const activeDetails = selected ? details[selected] || {} : {};
 
@@ -132,7 +134,11 @@ export default function BookingPaymentPage({
     <div className="min-h-screen bg-white">
       <div className="mx-auto max-w-2xl px-4 py-12 sm:px-6 lg:px-8">
         <h1 className="text-3xl font-bold text-gray-900">
-          {submitted ? "Payment submitted" : "Pay for your stay"}
+          {confirmed
+            ? "Booking confirmed"
+            : submitted
+              ? "Payment submitted"
+              : "Pay for your stay"}
         </h1>
 
         {property && (
@@ -165,7 +171,33 @@ export default function BookingPaymentPage({
           </dl>
         </section>
 
-        {submitted ? (
+        {rejected && (
+          <div className="mt-8 rounded-xl border border-red-200 bg-red-50 p-5">
+            <p className="font-medium text-red-900">
+              Your host could not match that reference
+            </p>
+            <p className="mt-1 text-sm text-red-800">
+              Double-check the reference number from your transfer and submit
+              it again below. Your booking is still held.
+            </p>
+          </div>
+        )}
+
+        {confirmed ? (
+          <div className="mt-8 rounded-xl border border-green-200 bg-green-50 p-5">
+            <div className="flex items-start gap-3">
+              <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-green-700" />
+              <div>
+                <p className="font-medium text-green-900">
+                  Your host confirmed your payment
+                </p>
+                <p className="mt-1 text-sm text-green-800">
+                  Your stay is booked. See you on {booking.check_in}.
+                </p>
+              </div>
+            </div>
+          </div>
+        ) : submitted ? (
           <div className="mt-8 rounded-xl border border-green-200 bg-green-50 p-5">
             <div className="flex items-start gap-3">
               <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-green-700" />
