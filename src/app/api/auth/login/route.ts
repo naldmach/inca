@@ -1,10 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
+import { enforceRateLimit } from "@/lib/rate-limit";
 
 // Force dynamic rendering for this route
 export const dynamic = "force-dynamic";
 import { authenticateUser, generateToken } from "@/lib/auth";
 
 export async function POST(request: NextRequest) {
+  const limited = await enforceRateLimit(request, "login", 10, 900);
+  if (limited) return limited;
+
   try {
     const { email, password } = await request.json();
 

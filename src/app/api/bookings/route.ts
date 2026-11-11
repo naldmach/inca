@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { enforceRateLimit } from "@/lib/rate-limit";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { verifyToken } from "@/lib/auth";
 import { countNights, enabledMethods } from "@/lib/payments";
@@ -9,6 +10,9 @@ export const dynamic = "force-dynamic";
 // Any signed-in user may book. This is deliberately not admin-gated, but it
 // only ever writes a booking owned by the token's user.
 export async function POST(request: NextRequest) {
+  const limited = await enforceRateLimit(request, "booking", 20, 3600);
+  if (limited) return limited;
+
   const token = request.cookies.get("auth-token")?.value;
   if (!token) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

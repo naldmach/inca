@@ -3,6 +3,26 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { NextRequest, NextResponse } from "next/server";
 import { uploadPropertyImage } from "@/lib/storage";
 import { verifyToken } from "@/lib/auth";
+import { z } from "zod";
+
+// Allowlist for the property-creation body. Unknown keys are stripped by
+// zod's default object behaviour and never reach the insert.
+const propertyInputSchema = z.object({
+  title: z.string().min(3).max(255),
+  description: z.string().max(5000).optional().default(""),
+  location: z.string().min(2).max(255),
+  address: z.string().min(5).max(500),
+  city: z.string().min(2).max(255),
+  state: z.string().min(2).max(255),
+  zip_code: z.string().min(3).max(20),
+  price: z.number().positive().max(10_000_000),
+  guests: z.number().int().min(1).max(100),
+  bedrooms: z.number().int().min(0).max(50),
+  bathrooms: z.number().int().min(0).max(50),
+  amenities: z.array(z.string().max(100)).max(100).optional(),
+  status: z.enum(["draft", "active", "inactive"]),
+  airbnb_id: z.string().max(255).optional(),
+});
 
 // Force dynamic rendering for this route
 export const dynamic = "force-dynamic";
@@ -70,14 +90,37 @@ export async function POST(request: NextRequest) {
 
   try {
     const formData = await request.formData();
-    const propertyData = JSON.parse(formData.get("propertyData") as string);
+    const raw = JSON.parse(formData.get("propertyData") as string);
     const images = formData.getAll("images") as File[];
 
-    // Create property
+    const parsed = propertyInputSchema.safeParse(raw);
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: parsed.error.issues[0]?.message || "Invalid property data" },
+        { status: 400 }
+      );
+    }
+    const propertyData = parsed.data;
+
+    // Built field by field rather than spreading the request body, so a
+    // caller cannot set columns the form does not own (user_id, airbnb_synced,
+    // listing_details, created_at).
     const { data: property, error: propertyError } = await supabase
       .from("properties")
       .insert({
-        ...propertyData,
+        title: propertyData.title,
+        description: propertyData.description,
+        location: propertyData.location,
+        address: propertyData.address,
+        city: propertyData.city,
+        state: propertyData.state,
+        zip_code: propertyData.zip_code,
+        price: propertyData.price,
+        guests: propertyData.guests,
+        bedrooms: propertyData.bedrooms,
+        bathrooms: propertyData.bathrooms,
+        status: propertyData.status,
+        airbnb_id: propertyData.airbnb_id ?? null,
         user_id: decoded.id,
         images: [], // Will be updated after image upload
         amenities: propertyData.amenities || [],

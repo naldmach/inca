@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { enforceRateLimit } from "@/lib/rate-limit";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { createUser, generateToken } from "@/lib/auth";
 
@@ -9,6 +10,9 @@ const MIN_PASSWORD_LENGTH = 8;
 const EMAIL_PATTERN = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 
 export async function POST(request: NextRequest) {
+  const limited = await enforceRateLimit(request, "signup", 5, 3600);
+  if (limited) return limited;
+
   try {
     const body = await request.json();
     const name = typeof body.name === "string" ? body.name.trim() : "";
