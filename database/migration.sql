@@ -1,3 +1,8 @@
+-- SUPERSEDED - DO NOT RUN.
+-- This file creates "FOR ALL USING (true)" policies, which grant the public
+-- anon key full read and write on every table. Use complete-setup.sql, then
+-- the add-*.sql migrations, then fix-rls-policies.sql.
+
 -- Migration Script for InCA Homes Property Management System
 -- This script updates existing tables to match the new schema
 

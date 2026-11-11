@@ -85,18 +85,29 @@ ALTER TABLE bookings ENABLE ROW LEVEL SECURITY;
 ALTER TABLE analytics ENABLE ROW LEVEL SECURITY;
 
 -- Step 9: Create RLS policies
--- Users: Only admins can manage users
-CREATE POLICY "Admins can manage users" ON users FOR ALL USING (true);
+--
+-- Exactly one policy, and it is deliberately narrow.
+--
+-- These tables previously carried "FOR ALL USING (true)" policies described
+-- as "admin only". USING (true) is not an admin check: policies apply to the
+-- anon role, which is the key shipped in the browser bundle, so those
+-- policies granted the public full read and write on every table including
+-- password hashes. Admin access does not come from RLS here - it comes from
+-- the service-role client in src/lib/supabase/admin.ts, which bypasses RLS
+-- and is only ever used from server code behind a role check.
+--
+-- With RLS enabled and no policy, a table denies anon and authenticated
+-- outright while the service role still reaches it. That is the intent for
+-- users, bookings and analytics.
 
--- Properties: Public read, admin write
-CREATE POLICY "Public can view active properties" ON properties FOR SELECT USING (status = 'active');
-CREATE POLICY "Admins can manage all properties" ON properties FOR ALL USING (true);
+-- Properties: the public site reads active listings with the anon key.
+CREATE POLICY "Public can view active properties"
+  ON properties FOR SELECT
+  TO anon, authenticated
+  USING (status = 'active');
 
--- Bookings: Admin only
-CREATE POLICY "Admins can manage bookings" ON bookings FOR ALL USING (true);
-
--- Analytics: Admin only
-CREATE POLICY "Admins can manage analytics" ON analytics FOR ALL USING (true);
+-- users, bookings, analytics: no policies on purpose. Do not add
+-- USING (true) here.
 
 -- Step 10: Create a function to automatically update updated_at timestamp
 CREATE OR REPLACE FUNCTION update_updated_at_column()
