@@ -20,7 +20,7 @@ A modern, Airbnb-like property management system built for property owners who w
 
 ### Frontend
 
-- **Framework:** Next.js 14 (React)
+- **Framework:** Next.js 15 (React 18)
 - **Styling:** Tailwind CSS + Headless UI
 - **Icons:** Lucide React
 - **Forms:** React Hook Form + Zod validation
@@ -32,20 +32,21 @@ A modern, Airbnb-like property management system built for property owners who w
 - **Runtime:** Node.js (Vercel Serverless Functions)
 - **Framework:** Next.js API Routes
 - **Authentication:** JWT + bcrypt
-- **File Upload:** Formidable + Cloudinary
+- **File Upload:** Supabase Storage (`property-images` bucket)
 - **Validation:** Zod schemas
 
 ### Database
 
 - **Primary DB:** Supabase (PostgreSQL - Free tier)
-- **ORM:** Native SQL queries with pg client
+- **Data access:** supabase-js. Anon key for public reads (bound by RLS),
+  service role for writes.
 - **Storage:** 500MB (thousands of properties)
 - **Features:** Built-in auth, real-time, auto-backups
 
 ### Third-Party Services
 
 - **Hosting:** Vercel (Free Hobby Plan)
-- **Images:** Cloudinary (Free - 25GB bandwidth)
+- **Images:** Supabase Storage
 - **Domain:** .vercel.app initially (custom domain $10/year optional)
 - **Analytics:** Vercel Analytics (free)
 - **Monitoring:** Built-in Vercel monitoring
@@ -58,7 +59,7 @@ A modern, Airbnb-like property management system built for property owners who w
 - Node.js 18+
 - npm or yarn
 - Supabase account
-- Cloudinary account
+- A `JWT_SECRET` (generate with `openssl rand -base64 32`)
 
 ### Installation
 
@@ -76,27 +77,29 @@ A modern, Airbnb-like property management system built for property owners who w
    ```
 
 3. **Set up environment variables**
-   Create a `.env.local` file in the root directory:
 
-   ```env
-   # Database
-   DATABASE_URL=postgresql://...supabase...
-   NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-
-   # Authentication
-   JWT_SECRET=your-super-secret-key-here
-   NEXTAUTH_URL=https://incahomes.vercel.app
-
-   # Image Storage
-   CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
-   CLOUDINARY_API_KEY=your_cloudinary_api_key
-   CLOUDINARY_API_SECRET=your_cloudinary_api_secret
-
-   # Application Configuration
-   NEXT_PUBLIC_APP_URL=https://your-app-name.vercel.app  # For production
-   # NEXT_PUBLIC_APP_URL=http://localhost:3000  # For local development
+   ```bash
+   cp .env.example .env.local
    ```
+
+   Then fill in the four values. `.env.example` documents which are public
+   (inlined into the browser bundle) and which are secret. See also
+   [SECURITY.md](SECURITY.md).
+
+4. **Run the database migrations**
+
+   In the Supabase SQL Editor, run in this order:
+
+   | File | Purpose |
+   |---|---|
+   | `database/complete-setup.sql` | Tables and seed data (new projects only) |
+   | `database/add-listing-details.sql` | `listing_details` for the host wizard |
+   | `database/add-booking-payments.sql` | Booking payment columns |
+   | `database/add-rate-limits.sql` | Shared rate-limit counters |
+   | `database/fix-rls-policies.sql` | **Required.** Closes public read/write access |
+
+   `fix-rls-policies.sql` is not optional: without it the anon key can read
+   every password hash and insert an admin account.
 
 4. **Set up the database**
 
@@ -134,7 +137,7 @@ src/
 ├── lib/                  # Utility libraries
 │   ├── auth.ts           # Authentication helpers
 │   ├── supabase/         # Database client
-│   ├── cloudinary.ts     # Image upload
+│   ├── storage.ts       # Supabase Storage uploads
 │   └── utils.ts          # Helper functions
 └── types/                # TypeScript definitions
 ```
@@ -145,7 +148,7 @@ The system uses the following main tables:
 
 - **users** - Admin authentication and user management
 - **properties** - Property listings with images and amenities
-- **bookings** - Booking information (synced from Airbnb)
+- **bookings** - On-site bookings and manual payment settlement
 - **analytics** - Event tracking and analytics data
 
 ## 🔌 API Endpoints

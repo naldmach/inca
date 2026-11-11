@@ -3,6 +3,7 @@ import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { formatPrice } from "@/lib/utils";
+import { createClient } from "@/lib/supabase/server";
 
 // Comprehensive type definitions for property-related data
 interface PropertyImage {
@@ -30,34 +31,33 @@ interface Property {
   amenities?: string[];
 }
 
+/**
+ * Reads the listing directly rather than fetching this app's own API over
+ * HTTP. The previous version built a URL from NEXT_PUBLIC_APP_URL, which is
+ * not set anywhere, so it fell back to http://localhost:3000 — that does not
+ * resolve to the app on Vercel, breaking the page in production.
+ *
+ * Uses the anon client, so it is bound by the public-read RLS policy and can
+ * only ever return an active listing.
+ */
 async function getProperty(id: string): Promise<Property | null> {
   try {
-    const res = await fetch(
-      `${
-        process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"
-      }/api/properties/${id}`,
-      {
-        cache: "no-store",
-      }
-    );
+    const supabase = createClient();
+    const { data, error } = await supabase
+      .from("properties")
+      .select("*")
+      .eq("id", id)
+      .eq("status", "active")
+      .maybeSingle();
 
-    if (!res.ok) {
-      if (res.status === 404) {
-        return null;
-      }
-      console.error(`HTTP error! status: ${res.status}`);
+    if (error) {
+      console.error("Error loading property:", error.message);
       return null;
     }
 
-    const data = await res.json();
-
-    if (data.property) {
-      return data.property as Property;
-    }
-
-    return null;
+    return (data as Property) ?? null;
   } catch (error) {
-    console.error("Error fetching property:", error);
+    console.error("Error loading property:", error);
     return null;
   }
 }
