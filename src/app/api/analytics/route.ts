@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { NextRequest, NextResponse } from "next/server";
 import { verifyToken } from "@/lib/auth";
 
@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic';
 export async function GET(request: NextRequest) {
   let supabase;
   try {
-    supabase = createClient();
+    supabase = createAdminClient();
   } catch (error) {
     return NextResponse.json(
       { error: "Database connection failed. Please check environment variables." },

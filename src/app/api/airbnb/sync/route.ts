@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { NextRequest, NextResponse } from "next/server";
 import { verifyToken } from "@/lib/auth";
 
@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 // This endpoint will be used to sync properties with Airbnb listings
 // For now, we'll create a manual mapping system
 export async function POST(request: NextRequest) {
-  const supabase = createClient();
+  const supabase = createAdminClient();
 
   // Check authentication
   const token = request.cookies.get("auth-token")?.value;
@@ -67,7 +67,7 @@ export async function POST(request: NextRequest) {
 
 // Get all properties with their Airbnb status
 export async function GET(request: NextRequest) {
-  const supabase = createClient();
+  const supabase = createAdminClient();
 
   // Check authentication
   const token = request.cookies.get("auth-token")?.value;

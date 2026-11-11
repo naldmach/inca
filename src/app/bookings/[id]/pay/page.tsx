@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { use, useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { CheckCircle2 } from "lucide-react";
@@ -18,13 +18,13 @@ interface Booking {
   payment_reference: string | null;
 }
 
-// Client components receive params as a plain object in this Next version
 export default function BookingPaymentPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  const { id } = params;
+  // Next 15 passes params as a promise to client pages
+  const { id } = use(params);
   const router = useRouter();
 
   const [booking, setBooking] = useState<Booking | null>(null);

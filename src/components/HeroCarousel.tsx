@@ -1,5 +1,12 @@
 "use client";
 
+interface CarouselProperty {
+  title: string;
+  location?: string;
+  price?: number;
+  images: { url: string; is_primary?: boolean }[];
+}
+
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -24,12 +31,13 @@ export default function HeroCarousel() {
           const data = await response.json();
           const propertyImages = data.properties
             ?.filter(
-              (property: any) => property.images && property.images.length > 0
+              (property: CarouselProperty) =>
+                property.images && property.images.length > 0
             )
             .slice(0, 6)
-            .map((property: any) => ({
+            .map((property: CarouselProperty) => ({
               url:
-                property.images.find((img: any) => img.is_primary)?.url ||
+                property.images.find((img) => img.is_primary)?.url ||
                 property.images[0]?.url,
               title: property.title,
               location: property.location,

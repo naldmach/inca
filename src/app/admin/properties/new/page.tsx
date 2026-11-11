@@ -3,14 +3,18 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
-import PropertyForm from "@/components/admin/PropertyForm";
+import PropertyForm, {
+  type PropertyFormData,
+} from "@/components/admin/PropertyForm";
 
 export default function NewPropertyPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
 
-  const handleSubmit = async (data: any) => {
+  const handleSubmit = async (
+    data: PropertyFormData & { images: File[] }
+  ) => {
     setLoading(true);
     setError("");
 

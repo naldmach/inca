@@ -47,13 +47,21 @@ export function generateToken(user: Omit<User, 'password_hash'>): string {
   );
 }
 
-export function verifyToken(token: string): any {
+/** Claims carried in the auth cookie. Mirrors generateToken's payload. */
+export interface TokenPayload {
+  id: number;
+  email: string;
+  name: string;
+  role: string;
+}
+
+export function verifyToken(token: string): TokenPayload | null {
   // Resolved outside the try so a misconfigured secret fails loudly instead of
   // being swallowed as an invalid-token 401.
   const secret = getJwtSecret();
 
   try {
-    return jwt.verify(token, secret);
+    return jwt.verify(token, secret) as TokenPayload;
   } catch (error) {
     return null;
   }

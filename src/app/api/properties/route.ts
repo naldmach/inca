@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { NextRequest, NextResponse } from "next/server";
 import { uploadPropertyImage } from "@/lib/storage";
 import { verifyToken } from "@/lib/auth";
@@ -50,7 +51,7 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const supabase = createClient();
+  const supabase = createAdminClient();
 
   // Check authentication
   const token = request.cookies.get("auth-token")?.value;

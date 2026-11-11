@@ -24,7 +24,7 @@ const propertySchema = z.object({
   airbnb_id: z.string().optional(),
 });
 
-type PropertyFormData = z.infer<typeof propertySchema>;
+export type PropertyFormData = z.infer<typeof propertySchema>;
 
 interface PropertyFormProps {
   initialData?: Partial<PropertyFormData>;

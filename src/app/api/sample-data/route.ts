@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { NextRequest, NextResponse } from "next/server";
 import { verifyToken } from "@/lib/auth";
 
@@ -6,7 +6,7 @@ import { verifyToken } from "@/lib/auth";
 export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
-  const supabase = createClient();
+  const supabase = createAdminClient();
 
   // Check authentication
   const token = request.cookies.get("auth-token")?.value;

@@ -1,31 +1,20 @@
-import { createServerClient } from "@supabase/ssr";
-import { cookies as getCookies } from "next/headers";
+import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 
+/**
+ * Anon-key client for public reads (active property listings).
+ *
+ * It carries no session: the app authenticates with its own JWT cookie, not
+ * Supabase Auth, so there is nothing to read from cookies here. The previous
+ * version cast `cookies()` through `any` to read one, which returned
+ * undefined under Next 14 and would have returned a Promise under Next 15.
+ *
+ * Anything that writes, or reads data a visitor should not see, must use
+ * `createAdminClient()` instead — this client is bound by RLS.
+ */
 export function createClient() {
-  return createServerClient(
+  return createSupabaseClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        get(name: string) {
-          return (getCookies() as any).get(name)?.value;
-        },
-        set(
-          name: string,
-          value: string,
-          options: {
-            path?: string;
-            maxAge?: number;
-            domain?: string;
-            sameSite?: string;
-            secure?: boolean;
-          }
-        ) {
-          // Server-side cookie setting is not implemented
-          // This is intentional as we don't need to set cookies server-side
-          return;
-        },
-      },
-    }
+    { auth: { persistSession: false } }
   );
 }
